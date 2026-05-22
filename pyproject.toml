@@ -1,0 +1,18 @@
+[project]
+name = "agent-cost-tracker-mcp"
+version = "1.0.0"
+description = "MCP server that tracks AI agent token usage, API costs, and provides budget alerts"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.0.0",
+    "tiktoken>=0.5.0",
+]
+
+[project.scripts]
+agent-cost-tracker = "server:main"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,33 @@
+# Smithery.ai deployment configuration for Agent Cost Tracker MCP
+# https://smithery.ai
+
+name: agent-cost-tracker
+version: 1.0.0
+description: Track AI agent token usage, API costs, and budget alerts
+
+command:
+  type: stdio
+  entry: python
+  args:
+    - server.py
+
+capabilities:
+  tools:
+    - cost_track_call
+    - cost_get_usage
+    - cost_set_budget
+    - cost_list_models
+    - cost_check_budget
+    - cost_estimate
+
+config:
+  environment:
+    AGENT_COST_TRACKER_DATA_DIR: ~/.agent-cost-tracker
+
+runtime:
+  python: ">=3.10"
+  dependencies:
+    - mcp>=1.0.0
+    - tiktoken>=0.5.0
+
+repository: https://github.com/rahu258/agent-cost-tracker-mcp

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Cost Tracker MCP — AI Agent Spend Intelligence</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --card: #12121a;
+            --border: #1e1e2e;
+            --text: #e0e0e0;
+            --muted: #8888aa;
+            --accent: #7c3aed;
+            --accent-glow: #a78bfa;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .hero {
+            text-align: center;
+            padding: 100px 24px 60px;
+            background: linear-gradient(135deg, #1a0a2e 0%, #0a0a1f 50%, #0a1a2e 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-glow), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        .badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--card);
+        }
+        .badge.free { color: var(--green); border-color: var(--green); }
+        .badge.pro { color: var(--accent-glow); border-color: var(--accent); }
+        .badge.mcp { color: #60a5fa; border-color: #60a5fa; }
+        .cta {
+            display: inline-block;
+            padding: 14px 32px;
+            background: var(--accent);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 24px rgba(124, 58, 237, 0.3);
+        }
+        .cta:hover { background: #6d28d9; box-shadow: 0 6px 32px rgba(124, 58, 237, 0.5); transform: translateY(-1px); }
+        .section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+            color: var(--accent-glow);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.2s;
+        }
+        .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .feature-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+        .feature-card p { color: var(--muted); font-size: 0.95rem; }
+        .feature-icon { font-size: 2rem; margin-bottom: 12px; }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .pricing-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px 28px;
+            text-align: center;
+        }
+        .pricing-card.featured { border-color: var(--accent); background: linear-gradient(135deg, #1a0a2e20, #12122a); }
+        .pricing-card h3 { font-size: 1.2rem; margin-bottom: 16px; }
+        .price { font-size: 3rem; font-weight: 800; color: var(--accent-glow); }
+        .price span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+        .pricing-card ul { list-style: none; margin: 24px 0; text-align: left; }
+        .pricing-card li { padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--muted); }
+        .pricing-card li::before { content: "✓ "; color: var(--green); }
+        .pricing-btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-free { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+        .btn-pro { background: var(--accent); color: white; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3); }
+        .btn-free:hover { border-color: var(--accent); }
+        .btn-pro:hover { background: #6d28d9; }
+        .installation {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+        }
+        .installation code {
+            display: block;
+            padding: 16px;
+            background: #0a0a0f;
+            border-radius: 8px;
+            color: var(--accent-glow);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero { padding: 60px 16px 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>Agent Cost Tracker MCP</h1>
+        <p>AI agents burn tokens and call APIs — now they can track what it costs. Budget awareness for autonomous agents.</p>
+        <div class="badges">
+            <span class="badge free">🆓 Free Tier: 1,000 calls/mo</span>
+            <span class="badge pro">⭐ Pro: $19/mo unlimited</span>
+            <span class="badge mcp">🔌 MCP Protocol</span>
+        </div>
+        <a href="#install" class="cta">Get Started →</a>
+    </section>
+
+    <section class="section">
+        <h2>🔧 Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Cost Tracking</h3>
+                <p>Track every API call with model name, token counts, and auto-calculated costs.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Budget Alerts</h3>
+                <p>Set monthly budgets with configurable alert thresholds. Get warned before you overspend.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Usage Analytics</h3>
+                <p>View spending by model, period (today/week/month/all), with markdown or JSON output.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔮</div>
+                <h3>Cost Estimation</h3>
+                <p>Estimate costs before making calls — input text, get token count and projected cost.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏷️</div>
+                <h3>Model Pricing Database</h3>
+                <p>Pre-seeded with 10+ models from OpenAI, Anthropic, DeepSeek, Google, Meta, Cohere.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔌</div>
+                <h3>MCP Native</h3>
+                <p>Standard MCP protocol — plug into any MCP client like Claude Desktop, Cursor, or Smithery.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="install">
+        <h2>📦 Installation</h2>
+        <div class="installation">
+            <code># Clone and install
+git clone https://github.com/rahu258/agent-cost-tracker-mcp.git
+cd agent-cost-tracker-mcp
+pip install -r requirements.txt</code>
+        </div>
+        <h3 style="margin-top: 24px;">Claude Desktop Config</h3>
+        <div class="installation">
+            <code>{
+  "mcpServers": {
+    "agent-cost-tracker": {
+      "command": "python",
+      "args": ["/path/to/server.py"]
+    }
+  }
+}</code>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>🔌 6 MCP Tools</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3>cost_track_call</h3>
+                <p>Record an API call — model, tokens, cost. Returns running totals.</p>
+            </div>
+            <div class="feature-card">
+                <h3>cost_get_usage</h3>
+                <p>Usage summary by period with per-model breakdown.</p>
+            </div>
+            <div class="feature-card">
+                <h3>cost_set_budget</h3>
+                <p>Set monthly spend limit and alert threshold.</p>
+            </div>
+            <div class="feature-card">
+                <h3>cost_list_models</h3>
+                <p>All supported models with per-token pricing.</p>
+            </div>
+            <div class="feature-card">
+                <h3>cost_check_budget</h3>
+                <p>Current budget status with projected spend.</p>
+            </div>
+            <div class="feature-card">
+                <h3>cost_estimate</h3>
+                <p>Estimate cost before making a call.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>💳 Pricing</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>🆓 Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul>
+                    <li>Up to 1,000 tracked calls/month</li>
+                    <li>All 6 MCP tools</li>
+                    <li>Model pricing database</li>
+                    <li>Budget alerts</li>
+                    <li>Community support</li>
+                </ul>
+                <a href="#install" class="pricing-btn btn-free">Get Started</a>
+            </div>
+            <div class="pricing-card featured">
+                <h3>⭐ Pro</h3>
+                <div class="price">$19<span>/month</span></div>
+                <ul>
+                    <li>Unlimited tracked calls</li>
+                    <li>All 6 MCP tools</li>
+                    <li>Model pricing database</li>
+                    <li>Advanced budget alerts</li>
+                    <li>Priority support</li>
+                    <li>Multi-agent tracking</li>
+                </ul>
+                <a href="https://buy.stripe.com/PLACEHOLDER" class="pricing-btn btn-pro">Subscribe Pro</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Agent Cost Tracker MCP &copy; 2026 — MIT License</p>
+        <p style="margin-top: 8px;">
+            <a href="https://github.com/rahu258/agent-cost-tracker-mcp" style="color: var(--accent-glow);">GitHub</a> ·
+            <a href="https://smithery.ai" style="color: var(--accent-glow);">Smithery</a> ·
+            <a href="https://buy.stripe.com/PLACEHOLDER" style="color: var(--accent-glow);">Pro Upgrade</a>
+        </p>
+    </footer>
+
+  <div class="crosslink-footer">
+    <hr>
+    <p><strong>Part of the <a href="https://github.com/Rumblingb" target="_blank" rel="noopener">Rumblingb MCP Ecosystem</a></strong> &mdash; 67+ open-source MCP servers for AI agents</p>
+    <p class="crosslink-links"><a href="https://rumblingb.github.io/agent-legal-counsel-mcp/">Agent Legal Counsel</a> | <a href="https://rumblingb.github.io/agent-memory-mcp/">Agent Memory</a> | <a href="https://rumblingb.github.io/agentpassport-api/">AgentPassport API</a> | <a href="https://rumblingb.github.io/agentpay-labs-hub/">AgentPay Labs Hub</a> | <a href="https://rumblingb.github.io/agentpay-sentinel-mcp/">AgentPay Sentinel</a> | <a href="https://rumblingb.github.io/company-intel-mcp/">Company Intel</a> | <a href="https://rumblingb.github.io/content-moderation-mcp/">Content Moderation</a> | <a href="https://rumblingb.github.io/content-toolkit-mcp/">Content Toolkit</a> | <a href="https://rumblingb.github.io/court-records-mcp/">Court Records</a> | <a href="https://rumblingb.github.io/currency-exchange-mcp/">Currency Exchange</a> | <a href="https://rumblingb.github.io/email-finder-mcp/">Email Finder</a> | <a href="https://rumblingb.github.io/mcp-bridge-extension/">MCP Bridge</a> | <a href="https://rumblingb.github.io/mcp-config-generator/">MCP Config Generator</a> | <a href="https://rumblingb.github.io/mcp-health-monitor/">MCP Health Monitor</a> | <a href="https://rumblingb.github.io/patent-search-mcp/">Patent Search</a> | <a href="https://rumblingb.github.io/rental-agent-mcp/">Rental Agent</a> | <a href="https://rumblingb.github.io/screenshot-api/">Screenshot API</a> | <a href="https://rumblingb.github.io/sec-financial-mcp/">SEC Financial</a> | <a href="https://rumblingb.github.io/wikipedia-mcp/">Wikipedia</a></p>
+  </div>
+</body>
+</html>
